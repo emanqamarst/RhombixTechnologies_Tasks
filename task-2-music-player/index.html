@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vibex — Premium Music Player</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Loading Screen -->
+  <div id="loader" class="loader">
+    <div class="loader-logo">
+      <span class="loader-v">V</span><span class="loader-ibex">IBEX</span>
+    </div>
+    <div class="loader-bars">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Floating Particles Canvas -->
+  <canvas id="particles"></canvas>
+
+  <!-- App Wrapper -->
+  <div class="app" id="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <!-- Logo -->
+      <div class="sidebar-logo">
+        <div class="logo-icon">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <path d="M3 16 Q3 6 11 4 Q19 6 19 16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            <circle cx="11" cy="17" r="3" fill="currentColor"/>
+          </svg>
+        </div>
+        <span class="logo-text">Vibex</span>
+        <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">✕</button>
+      </div>
+
+      <!-- Search -->
+      <div class="search-wrap">
+        <span class="search-icon">⌕</span>
+        <input type="text" id="searchInput" class="search-input" placeholder="Search songs, artists…" autocomplete="off" />
+        <button id="clearSearch" class="clear-search" aria-label="Clear search">✕</button>
+      </div>
+
+      <!-- Categories -->
+      <div class="categories">
+        <button class="cat-btn active" data-cat="all">All</button>
+        <button class="cat-btn" data-cat="pop">Pop</button>
+        <button class="cat-btn" data-cat="lofi">Lo-fi</button>
+        <button class="cat-btn" data-cat="hiphop">Hip-Hop</button>
+        <button class="cat-btn" data-cat="classical">Classical</button>
+        <button class="cat-btn" data-cat="chill">Chill</button>
+      </div>
+
+      <!-- Playlist -->
+      <div class="playlist-header">
+        <span>Playlist</span>
+        <span class="playlist-count" id="playlistCount">10 songs</span>
+      </div>
+      <ul class="playlist" id="playlist" role="list"></ul>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+      <!-- Top Bar -->
+      <header class="topbar">
+        <button class="menu-btn" id="menuBtn" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="topbar-title">Now Playing</div>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <span class="sun">☀</span>
+          <span class="moon">☾</span>
+        </button>
+      </header>
+
+      <!-- Album Art -->
+      <div class="album-section">
+        <div class="album-glow" id="albumGlow"></div>
+        <div class="album-wrap" id="albumWrap">
+          <img src="" alt="Album Cover" id="albumArt" class="album-art" />
+          <!-- Equalizer ring -->
+          <div class="eq-ring" id="eqRing">
+            <div class="eq-dot" style="--i:0"></div>
+            <div class="eq-dot" style="--i:1"></div>
+            <div class="eq-dot" style="--i:2"></div>
+            <div class="eq-dot" style="--i:3"></div>
+            <div class="eq-dot" style="--i:4"></div>
+            <div class="eq-dot" style="--i:5"></div>
+            <div class="eq-dot" style="--i:6"></div>
+            <div class="eq-dot" style="--i:7"></div>
+          </div>
+        </div>
+
+        <!-- Animated Bars -->
+        <div class="eq-bars" id="eqBars">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+
+      <!-- Song Info -->
+      <div class="song-info">
+        <div class="song-category" id="songCategory">Pop</div>
+        <h1 class="song-title" id="songTitle">Loading…</h1>
+        <p class="song-artist" id="songArtist">Artist</p>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="progress-section">
+        <span class="time-label" id="currentTime">0:00</span>
+        <div class="progress-bar-wrap" id="progressWrap" role="slider" aria-label="Song progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
+          <div class="progress-track">
+            <div class="progress-fill" id="progressFill"></div>
+            <div class="progress-thumb" id="progressThumb"></div>
+          </div>
+        </div>
+        <span class="time-label" id="totalTime">0:00</span>
+      </div>
+
+      <!-- Controls -->
+      <div class="controls">
+        <button class="ctrl-btn ctrl-sm" id="shuffleBtn" aria-label="Shuffle" title="Shuffle">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <polyline points="16 3 21 3 21 8"></polyline>
+            <line x1="4" y1="20" x2="21" y2="3"></line>
+            <polyline points="21 16 21 21 16 21"></polyline>
+            <line x1="15" y1="15" x2="21" y2="21"></line>
+          </svg>
+        </button>
+        <button class="ctrl-btn ctrl-md" id="prevBtn" aria-label="Previous">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
+        </button>
+        <button class="ctrl-btn ctrl-play" id="playBtn" aria-label="Play/Pause">
+          <svg class="play-icon" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          <svg class="pause-icon" width="28" height="28" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+        </button>
+        <button class="ctrl-btn ctrl-md" id="nextBtn" aria-label="Next">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+        </button>
+        <button class="ctrl-btn ctrl-sm" id="repeatBtn" aria-label="Repeat" title="Repeat">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <polyline points="17 1 21 5 17 9"></polyline>
+            <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+            <polyline points="7 23 3 19 7 15"></polyline>
+            <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Volume -->
+      <div class="volume-section">
+        <button class="vol-btn" id="muteBtn" aria-label="Mute">
+          <svg id="volIcon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+        </button>
+        <div class="vol-slider-wrap">
+          <div class="vol-track">
+            <div class="vol-fill" id="volFill"></div>
+          </div>
+          <input type="range" id="volumeSlider" class="vol-slider" min="0" max="100" value="80" aria-label="Volume" />
+        </div>
+        <span class="vol-label" id="volLabel">80%</span>
+      </div>
+
+      <!-- Keyboard shortcuts hint -->
+      <div class="shortcuts-hint">
+        <span>Space</span> Play/Pause &nbsp;·&nbsp; <span>←</span> Prev &nbsp;·&nbsp; <span>→</span> Next
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Hidden Audio Element -->
+  <audio id="audioPlayer" preload="auto"></audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
