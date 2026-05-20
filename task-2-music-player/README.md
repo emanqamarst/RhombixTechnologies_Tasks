@@ -2,14 +2,6 @@
 
 A stunning, fully responsive music player built with pure HTML, CSS, and Vanilla JavaScript.
 
-## 📁 Folder Structure
-
-task-2-music-player/
-├── index.html      ← Main HTML file
-├── style.css       ← All styles (glassmorphism, animations, responsive)
-├── script.js       ← All JavaScript logic
-└── README.md       ← This file
-
 
 ## ⌨️ Keyboard Shortcuts
 
