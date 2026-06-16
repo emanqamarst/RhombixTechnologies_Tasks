@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LibraryOS — Personal Book Manager</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-mark">L</span>
+      <span class="logo-text">LibraryOS</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-btn active" data-view="library">
+        <svg viewBox="0 0 24 24"><path d="M4 4h4v16H4V4zm6 0h4v16h-4V4zm6 0h4v16h-4V4z"/></svg>
+        My Library
+      </button>
+      <button class="nav-btn" data-view="borrow">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+        Borrowing
+      </button>
+      <button class="nav-btn" data-view="history">
+        <svg viewBox="0 0 24 24"><path d="M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A8.954 8.954 0 0 0 13 21a9 9 0 0 0 0-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
+        History
+      </button>
+    </nav>
+
+    <div class="sidebar-stats">
+      <div class="stat-item">
+        <span class="stat-num" id="stat-total">0</span>
+        <span class="stat-label">Total Books</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num" id="stat-borrowed">0</span>
+        <span class="stat-label">Borrowed</span>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <!-- LIBRARY VIEW -->
+    <div class="view active" id="view-library">
+      <header class="page-header">
+        <div>
+          <h1 class="page-title">My Library</h1>
+          <p class="page-sub">Manage your personal collection</p>
+        </div>
+        <button class="btn-primary" id="openAddModal">+ Add Book</button>
+      </header>
+
+      <div class="toolbar">
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24" class="search-icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="searchInput" placeholder="Search by title, author, or genre…" class="search-input"/>
+        </div>
+        <div class="filter-wrap">
+          <select id="categoryFilter" class="select-input">
+            <option value="">All Categories</option>
+            <option value="Fiction">Fiction</option>
+            <option value="Non-Fiction">Non-Fiction</option>
+            <option value="Science">Science</option>
+            <option value="History">History</option>
+            <option value="Biography">Biography</option>
+            <option value="Self-Help">Self-Help</option>
+            <option value="Technology">Technology</option>
+            <option value="Philosophy">Philosophy</option>
+          </select>
+          <select id="statusFilter" class="select-input">
+            <option value="">All Status</option>
+            <option value="available">Available</option>
+            <option value="borrowed">Borrowed</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="books-grid" id="booksGrid">
+        <div class="empty-state" id="emptyLibrary">
+          <div class="empty-icon">📚</div>
+          <h3>Your library is empty</h3>
+          <p>Add your first book to get started</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- BORROWING VIEW -->
+    <div class="view" id="view-borrow">
+      <header class="page-header">
+        <div>
+          <h1 class="page-title">Borrowing</h1>
+          <p class="page-sub">Books currently out on loan</p>
+        </div>
+      </header>
+      <div class="borrow-list" id="borrowList">
+        <div class="empty-state">
+          <div class="empty-icon">📖</div>
+          <h3>No books borrowed</h3>
+          <p>Lend a book from your library to see it here</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- HISTORY VIEW -->
+    <div class="view" id="view-history">
+      <header class="page-header">
+        <div>
+          <h1 class="page-title">History</h1>
+          <p class="page-sub">Complete borrowing activity log</p>
+        </div>
+        <button class="btn-ghost" id="clearHistory">Clear History</button>
+      </header>
+      <div class="history-list" id="historyList">
+        <div class="empty-state">
+          <div class="empty-icon">🗂️</div>
+          <h3>No history yet</h3>
+          <p>Activity will appear here once books are borrowed and returned</p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ADD / EDIT BOOK MODAL -->
+  <div class="modal-overlay" id="bookModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modalTitle">Add Book</h2>
+        <button class="modal-close" id="closeModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="bookId"/>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Title *</label>
+            <input type="text" id="bookTitle" placeholder="Book title"/>
+          </div>
+          <div class="form-group">
+            <label>Author *</label>
+            <input type="text" id="bookAuthor" placeholder="Author name"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Category</label>
+            <select id="bookCategory">
+              <option value="Fiction">Fiction</option>
+              <option value="Non-Fiction">Non-Fiction</option>
+              <option value="Science">Science</option>
+              <option value="History">History</option>
+              <option value="Biography">Biography</option>
+              <option value="Self-Help">Self-Help</option>
+              <option value="Technology">Technology</option>
+              <option value="Philosophy">Philosophy</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Year</label>
+            <input type="number" id="bookYear" placeholder="Publication year" min="1000" max="2099"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="bookDesc" placeholder="Brief description…" rows="3"></textarea>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-ghost" id="cancelModal">Cancel</button>
+          <button class="btn-primary" id="saveBook">Save Book</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEND MODAL -->
+  <div class="modal-overlay" id="lendModal">
+    <div class="modal modal-sm">
+      <div class="modal-header">
+        <h2>Lend Book</h2>
+        <button class="modal-close" id="closeLendModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="lendBookId"/>
+        <div class="form-group">
+          <label>Borrower Name *</label>
+          <input type="text" id="borrowerName" placeholder="Who's borrowing this book?"/>
+        </div>
+        <div class="form-group">
+          <label>Due Date *</label>
+          <input type="date" id="dueDate"/>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-ghost" id="cancelLend">Cancel</button>
+          <button class="btn-primary" id="confirmLend">Confirm Lend</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
