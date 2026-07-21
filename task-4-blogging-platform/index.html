@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Daily Byte — Blogging Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-top">
+    <span id="todayDate"></span>
+    <span>VOL. 4 · ISSUE 12</span>
+    <span id="postCount"></span>
+  </div>
+  <h1 id="siteTitle"></h1>
+  <div class="tagline">Stories, tutorials &amp; late-night thoughts on building things for the web</div>
+  <hr class="divider-rule">
+</header>
+
+<div class="controls">
+  <div class="search-wrap">
+    <input type="text" id="searchInput" placeholder="search headlines &amp; stories...">
+  </div>
+  <div class="categories" id="categoryChips"></div>
+</div>
+
+<main class="feed" id="feed"></main>
+
+<footer>
+  © <span id="year"></span> The Daily Byte — an independent web-dev journal &nbsp;·&nbsp;
+  <button onclick="openLogin()">Press Room (Admin)</button>
+</footer>
+
+<div class="overlay" id="postOverlay">
+  <div class="post-view" id="postView"></div>
+</div>
+
+<div id="adminLoginOverlay">
+  <div class="login-box">
+    <h3>🔒 Press Room</h3>
+    <p>Staff access only. (demo: <b>admin</b> / <b>admin123</b>)</p>
+    <div class="login-error" id="loginError"></div>
+    <input type="text" id="loginUser" placeholder="Username">
+    <input type="password" id="loginPass" placeholder="Password">
+    <div style="display:flex;gap:8px;">
+      <button class="btn" onclick="attemptLogin()">Enter</button>
+      <button class="btn ghost" onclick="closeLogin()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div id="adminOverlay">
+  <div class="admin-panel">
+    <div class="admin-top">
+      <h3>Editor's Desk</h3>
+      <div>
+        <button class="btn small ghost" onclick="logoutAdmin()">Log out</button>
+      </div>
+    </div>
+    <div class="admin-tabs">
+      <button class="admin-tab active" data-tab="posts" onclick="switchAdminTab('posts')">Posts</button>
+      <button class="admin-tab" data-tab="comments" onclick="switchAdminTab('comments')">Comments</button>
+      <button class="admin-tab" data-tab="readers" onclick="switchAdminTab('readers')">Readers</button>
+    </div>
+    <div class="admin-body">
+
+      <div class="admin-section active" id="tab-posts">
+        <h3 style="margin-top:0;" id="editorFormTitle">New Post</h3>
+        <div class="form-grid">
+          <div class="field"><label>Title</label><input type="text" id="pTitle" placeholder="How I built..."></div>
+          <div class="field"><label>Author</label><input type="text" id="pAuthor" placeholder="Jane Doe"></div>
+          <div class="field"><label>Category</label>
+            <select id="pCategory">
+              <option>Tutorial</option><option>Opinion</option><option>News</option><option>Design</option><option>Career</option>
+            </select>
+          </div>
+          <div class="field"><label>Tags (comma separated)</label><input type="text" id="pTags" placeholder="js, css, react"></div>
+        </div>
+        <div class="field">
+          <label>Cover Image</label>
+          <input type="file" id="pCoverFile" accept="image/*">
+          <img id="pCoverPreview" class="cover-preview">
+        </div>
+        <div class="field">
+          <label>Content</label>
+          <div class="editor-toolbar">
+            <button type="button" onclick="fmt('bold')"><b>B</b></button>
+            <button type="button" onclick="fmt('italic')"><i>I</i></button>
+            <button type="button" onclick="fmt('underline')"><u>U</u></button>
+            <button type="button" onclick="fmt('formatBlock','H2')">H2</button>
+            <button type="button" onclick="fmt('insertUnorderedList')">• List</button>
+            <button type="button" onclick="insertLink()">🔗</button>
+            <button type="button" onclick="document.getElementById('inlineImgFile').click()">🖼️</button>
+            <input type="file" id="inlineImgFile" accept="image/*" style="display:none;">
+          </div>
+          <div class="editable" id="pContent" contenteditable="true" placeholder="Write your story..."></div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:16px;">
+          <button class="btn" onclick="savePost()">💾 Publish / Save</button>
+          <button class="btn ghost" onclick="resetEditor()">Clear Form</button>
+        </div>
+
+        <h3>All Posts</h3>
+        <table>
+          <thead><tr><th>Title</th><th>Category</th><th>Date</th><th>Comments</th><th></th></tr></thead>
+          <tbody id="adminPostsTable"></tbody>
+        </table>
+      </div>
+
+      <div class="admin-section" id="tab-comments">
+        <h3 style="margin-top:0;">Moderate Comments</h3>
+        <table>
+          <thead><tr><th>Post</th><th>Reader</th><th>Comment</th><th>Date</th><th></th></tr></thead>
+          <tbody id="adminCommentsTable"></tbody>
+        </table>
+      </div>
+
+      <div class="admin-section" id="tab-readers">
+        <h3 style="margin-top:0;">Readers (from comment activity)</h3>
+        <table>
+          <thead><tr><th>Name</th><th>Comments Posted</th><th>Last Active</th><th></th></tr></thead>
+          <tbody id="adminReadersTable"></tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
